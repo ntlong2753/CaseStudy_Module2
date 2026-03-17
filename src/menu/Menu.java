@@ -1,16 +1,18 @@
 package menu;
 
 import model.Student;
-import service.StudentManager;
+import service.AdminManager;
 
 import service.AccountManager;
+import service.StudentManager;
 
 import java.util.Scanner;
 
 public class Menu {
     Scanner sc = new Scanner(System.in);
-    StudentManager std = new StudentManager();
+    AdminManager adminManager = new AdminManager();
     AccountManager acc = new AccountManager();
+    StudentManager studentManager = new StudentManager();
 
     public void menuManager() {
         int choice;
@@ -24,30 +26,32 @@ public class Menu {
             System.out.println("6. Thay đổi trạng thái sinh viên");
             System.out.println("7. Phân loại sinh viên");
             System.out.println("8. Thông tin tài khoản");
+            System.out.println("9. Đổi mật khẩu");
+            System.out.println("10. Xóa tài khoản");
             System.out.println("0. Thoát");
             System.out.print("Chọn: ");
             try {
                 choice = Integer.parseInt(sc.nextLine());
                 switch (choice) {
                     case 1:
-                        std.add(new Student());
+                        adminManager.add(new Student());
                         break;
                     case 2:
                         searchStudent();
                         break;
                     case 3:
-                        std.findAll();
+                        adminManager.findAll();
                         break;
                     case 4:
-                        std.update();
+                        adminManager.update();
                         break;
                     case 5:
                         System.out.print("Nhập ID sinh viên cần xóa: ");
                         String id = sc.nextLine();
-                        std.delete(id);
+                        adminManager.delete(id);
                         break;
                     case 6:
-                        std.updateStatus();
+                        adminManager.updateStatus();
                         break;
                     case 7:
                         sortStudent();
@@ -55,6 +59,12 @@ public class Menu {
                     case 8:
                         acc.displayAccountInfo();
                         break;
+                    case 9:
+                        acc.changePassword();
+                        break;
+                    case 10:
+                        acc.deleteAccount();
+                        return;
                     case 0:
                         return;
                     default:
@@ -84,7 +94,7 @@ public class Menu {
                     case 1:
                         System.out.print("Nhập ID: ");
                         String id = sc.nextLine();
-                        Student student = std.findById(id);
+                        Student student = adminManager.findById(id);
                         if (student != null) {
                             System.out.println(student);
                         } else {
@@ -94,7 +104,7 @@ public class Menu {
                     case 2:
                         System.out.print("Nhập tên: ");
                         String name = sc.nextLine();
-                        var students = std.findByName(name);
+                        var students = adminManager.findByName(name);
                         if (students.isEmpty()) {
                             System.out.println("Không tìm thấy sinh viên với tên: " + name);
                         } else {
@@ -108,7 +118,7 @@ public class Menu {
                         String statusInput = sc.nextLine();
                         try {
                             model.StudentStatus status = model.StudentStatus.valueOf(statusInput.toUpperCase());
-                            var result = std.findByStatus(status);
+                            var result = adminManager.findByStatus(status);
                             if (result.isEmpty()) {
                                 System.out.println("Không tìm thấy sinh viên với trạng thái: " + status);
                             } else {
@@ -123,7 +133,7 @@ public class Menu {
                     case 4:
                         System.out.print("Nhập gpa: ");
                         double gpa = Double.parseDouble(sc.nextLine());
-                        std.findByGpa(gpa);
+                        adminManager.findByGpa(gpa);
                     case 0:
                         return; // Quay lại menu chính
                     default:
@@ -142,7 +152,6 @@ public class Menu {
             System.out.println("Đăng nhập hoặc đăng ký");
             System.out.println("1. Đăng nhập");
             System.out.println("2. Đăng ký");
-            System.out.println("3. Xóa tài khoản");
             System.out.println("0. Thoát");
             try {
                 System.out.print("Chọn: ");
@@ -155,9 +164,6 @@ public class Menu {
                         break;
                     case 2:
                         acc.register();
-                        break;
-                    case 3:
-                        acc.deleteAccount();
                         break;
                     case 0:
                         System.out.println("Đã thoát chương trình.");
@@ -185,15 +191,42 @@ public class Menu {
                 choice = Integer.parseInt(sc.nextLine());
                 switch (choice) {
                     case 1:
-                        std.sortGpaAscending();
-                        std.findAll();
+                        adminManager.sortGpaAscending();
+                        adminManager.findAll();
                         break;
                     case 2:
-                        std.sortGpaDescending();
-                        std.findAll();
+                        adminManager.sortGpaDescending();
+                        adminManager.findAll();
                         break;
                     case 0:
                         return; // Quay lại menu chính
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Lỗi: Vui lòng nhập một số nguyên.");
+                choice = -1;
+            }
+        } while (true);
+    }
+
+    // menu chọn vai trò
+    public void menuRole() {
+        int choice;
+        do {
+            System.out.println("------MENU QUẢN LÝ SINH VIÊN------");
+            System.out.println("1. Quản trị viên");
+            System.out.println("2. Sinh viên");
+            System.out.println("0. Thoát");
+            try {
+                System.out.print("Chọn: ");
+                choice = Integer.parseInt(sc.nextLine());
+
+                switch (choice) {
+                    case 1:
+                        menuLogIn();
+                        break;
+                    case 2:
+                        System.out.println("tính năng đang được phát triển");
+                        break;
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Lỗi: Vui lòng nhập một số nguyên.");

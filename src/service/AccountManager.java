@@ -165,49 +165,48 @@ public class AccountManager {
             System.out.println("Tài khoản chưa được đăng ký");
             return false;
         }
+        currentUser = acc;
         return acc.getPassword().equals(password);
     }
 
+    // đăng xuất
+    public void logout() {
+        currentUser = null;
+        System.out.println("Đăng xuất thành công");
+    }
+
+
     // xóa tài khoản
     public void deleteAccount() {
-        String username;
-        System.out.print("Nhập username cần xóa: ");
-        username = sc.nextLine();
-        Account acc = findByUsername(username);
-        if (acc != null) {
+        Account acc = findByUsername(currentUser.getUsername());
+        while (true) {
+            System.out.print("Nhập mật khẩu: ");
+            String password = sc.nextLine();
+            if (!acc.getPassword().equals(password)) {
+                System.out.println("Mật khẩu không đúng");
+                continue;
+            }
+            break;
+        }
+
             accounts.remove(acc);
             // Lưu lại file sau khi xóa
             userFileHandler.writeUsersToFile(accounts);
             System.out.println("Xóa tài khoản thành công");
-        } else {
-            System.out.println("Tài khoản không tồn tại");
-        }
     }
 
     // hiển thị thông tin tài khoản
     public void displayAccountInfo() {
-        Scanner sc = new Scanner(System.in);
-        System.out.print("Nhập username: ");
-        String username = sc.nextLine();
+        /*if (currentUser == null) {
+            System.out.println("Bạn chưa đăng nhập");
+            return;
+        }*/
 
-        Account account = null;
-        for (Account acc : accounts) {
-            if (acc.getUsername().equalsIgnoreCase(username)) {
-                account = acc;
-                break;
-            }
-        }
-        checkAccount();
-        if (account != null) {
-            System.out.println("------ Thông tin tài khoản ------");
-            System.out.println("Email: " + account.getEmail());
-            System.out.println("Số điện thoại: " + account.getPhone());
-            System.out.println("Username: " + account.getUsername());
-            System.out.println("Password: " + account.getPassword());
-
-        } else {
-            System.out.println("Không tìm thấy tài khoản với username: " + username);
-        }
+        System.out.println("------ Thông tin tài khoản ------");
+        System.out.println("Email: " + currentUser.getEmail());
+        System.out.println("Số điện thoại: " + currentUser.getPhone());
+        System.out.println("Username: " + currentUser.getUsername());
+        System.out.println("Password: " + currentUser.getPassword());
         System.out.println();
     }
 
@@ -222,9 +221,18 @@ public class AccountManager {
     public void changePassword() {
         Account acc = findByUsername(currentUser.getUsername());
 
-        if (acc == null) {
+       /* if (acc == null) {
             System.out.println("Tài khoản không tồn tại");
             return;
+        }*/
+        while (true) {
+            System.out.print("Nhập mật khẩu cũ: ");
+            String oldPassword = sc.nextLine();
+            if (!acc.getPassword().equals(oldPassword)) {
+                System.out.println("Mật khẩu cũ không đúng");
+                continue;
+            }
+            break;
         }
         System.out.print("Nhập mật khẩu mới: ");
         String newPassword = sc.nextLine();
