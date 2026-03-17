@@ -13,6 +13,11 @@ import java.util.Scanner;
 public class AccountManager {
     private List<Account> accounts = new ArrayList<>();
     private UserFileHandler userFileHandler = new UserFileHandler();
+    private Account currentUser;
+
+    public AccountManager(Account currentUser) {
+        this.currentUser = currentUser;
+    }
 
 
     Scanner sc = new Scanner(System.in);
@@ -97,6 +102,7 @@ public class AccountManager {
             }
             break;
         }
+
         String username;
         while (true) {
             // username
@@ -126,7 +132,7 @@ public class AccountManager {
         return true;
     }
 
-    // đăng nhập
+    // đăng nhập tài khoản
     public boolean login() {
         String username;
         while (true) {
@@ -210,6 +216,20 @@ public class AccountManager {
         if (accounts.isEmpty()) {
             System.out.println("Danh sách tài khoản trống");
         }
+    }
 
+    // đổi mật khẩu
+    public void changePassword() {
+        Account acc = findByUsername(currentUser.getUsername());
+
+        if (acc == null) {
+            System.out.println("Tài khoản không tồn tại");
+            return;
+        }
+        System.out.print("Nhập mật khẩu mới: ");
+        String newPassword = sc.nextLine();
+        acc.setPassword(newPassword);
+        userFileHandler.writeUsersToFile(accounts);
+        System.out.println("Đổi mật khẩu thành công");
     }
 }

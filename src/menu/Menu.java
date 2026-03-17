@@ -1,6 +1,5 @@
 package menu;
 
-import model.Account;
 import model.Student;
 import service.StudentManager;
 
